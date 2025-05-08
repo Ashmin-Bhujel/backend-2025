@@ -66,3 +66,39 @@ The goal is to setup a basic project and install required dependencies.
 - [x] Test the project setup.
 
   - [x] `pnpm run dev`
+
+## Connecting to database (MongoDB)
+
+The goal is to connect to the database using mongoose.
+
+- [x] Create `db/` directory inside the `src/` directory.
+
+- [x] Create `index.js` file inside `src/db/` directory.
+
+- [x] Import necessary modules and write a function for connecting to the database.
+
+  ```js
+  import { config } from "dotenv";
+  import mongoose from "mongoose";
+
+  // Accessing environment variables
+  config();
+  const mongoDBUri = process.env.MONGODB_URI;
+  const dbName = process.env.DB_NAME;
+  const connectionString = `${mongoDBUri}/${dbName}`;
+
+  async function connectDB() {
+    try {
+      const response = await mongoose.connect(connectionString);
+      console.log("Successfully connected to MongoDB");
+      console.log("Host:", response.connection.host);
+    } catch (error) {
+      console.error("Failed to connect with MongoDB:", error);
+      process.exit(1);
+    }
+  }
+
+  export { connectDB };
+  ```
+
+- [x] Test the database connection.

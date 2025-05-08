@@ -1,1 +1,4 @@
-console.log("Learning Backend in 2025");
+import { connectDB } from "./db/index.js";
+
+// Connecting to database (MongoDB)
+connectDB();
