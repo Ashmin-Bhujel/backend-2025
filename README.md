@@ -11,4 +11,5 @@ GitHub repository for learning backend in 2025.
 
 ## 🎯 Checkpoints
 
-- [ ] Setting up the project
+- [x] [Setting up the project](./checkpoints/README.md/#setting-up-the-project)
+- [ ] Connecting to the database (MongoDB)
