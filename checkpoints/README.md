@@ -144,3 +144,60 @@ export { app };
 - `express.static()`: Middleware to serve static files from a directory.
 
 - `cookie-parser`: Middleware to parse cookies attached to the client request object.
+
+## `asyncHandler` Method and Some Custom Classes
+
+The goal is to create an `asyncHandler` method and custom classes for `APIError` and `APIResponse`.
+
+- [x] Create `utils/` directory inside the `src/` directory.
+
+- [x] Create `asyncHandler.js` file inside `src/utils/` directory.
+
+  ```js
+  const asyncHandler = (handlerFunction) => (req, res, next) =>
+    Promise.resolve(handlerFunction(req, res, next)).catch(next);
+  ```
+
+- [x] Create `apiError.js` file inside `src/utils/` directory.
+
+  ```js
+  class APIError extends Error {
+    constructor(
+      statusCode,
+      message = "Something went wrong!",
+      data = null,
+      errors = []
+    ) {
+      super(message);
+      this.name = this.constructor.name;
+      this.statusCode = statusCode;
+      this.data = data;
+      this.errors = errors;
+      this.success = false;
+      Error.captureStackTrace(this, this.constructor);
+    }
+
+    toJSON() {
+      return {
+        statusCode: this.statusCode,
+        message: this.message,
+        data: this.data,
+        errors: this.errors,
+        success: this.success,
+      };
+    }
+  }
+  ```
+
+- [x] Create `apiResponse.js` file inside `src/utils/` directory.
+
+  ```js
+  class APIResponse {
+    constructor(statusCode, message, data) {
+      this.statusCode = statusCode;
+      this.message = message;
+      this.data = data;
+      this.success = statusCode < 400;
+    }
+  }
+  ```
