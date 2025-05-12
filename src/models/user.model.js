@@ -1,4 +1,14 @@
+import { config } from "dotenv";
 import mongoose from "mongoose";
+import brcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+// Accessing environment variables
+config();
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+const accessTokenExpiry = process.env.ACCESS_TOKEN_EXPIRY;
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+const refreshTokenExpiry = process.env.REFRESH_TOKEN_EXPIRY;
 
 const userSchema = new mongoose.Schema(
   {
@@ -28,7 +38,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     coverImage: {
-      type: String, // Clodinary URL
+      type: String, // Cloudinary URL
     },
     watchHistory: [
       {
@@ -47,5 +57,49 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Using pre hook for hashing the password
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+
+  this.password = await brcrypt.hash(this.password, 10);
+  next();
+});
+
+// Method for validating password
+userSchema.methods.isValidPassword = async function (password) {
+  return await brcrypt.compare(password, this.password);
+};
+
+// Method for generating access token
+userSchema.methods.generateAccessToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      username: this.username,
+      fullname: this.fullname,
+      email: this.email,
+    },
+    accessTokenSecret,
+    {
+      expiresIn: accessTokenExpiry,
+    }
+  );
+};
+
+// Method for generating refresh token
+userSchema.methods.generateRefreshToken = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+    },
+    refreshTokenSecret,
+    {
+      expiresIn: refreshTokenExpiry,
+    }
+  );
+};
 
 export const User = mongoose.model("User", userSchema);

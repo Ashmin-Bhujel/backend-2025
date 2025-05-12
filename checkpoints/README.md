@@ -2,7 +2,7 @@
 
 ## Setting up the project
 
-The goal is to setup a basic project and install required dependencies.
+The goal was to setup a basic project and install required dependencies.
 
 - [x] Create an account for [MongoDB Atlas](https://cloud.mongodb.com/) (An online service for MongoDB).
 
@@ -69,7 +69,7 @@ The goal is to setup a basic project and install required dependencies.
 
 ## Connecting to database (MongoDB)
 
-The goal is to connect to the database using mongoose.
+The goal was to connect to the database using mongoose.
 
 - [x] Create `db/` directory inside the `src/` directory.
 
@@ -105,7 +105,7 @@ The goal is to connect to the database using mongoose.
 
 ## Configure Some Middlewares
 
-The goal is to configure some essential middlewares for `Express` inside `app.js` file
+The goal was to configure some essential middlewares for `Express` inside `app.js` file
 
 ```js
 import { config } from "dotenv";
@@ -147,7 +147,7 @@ export { app };
 
 ## `asyncHandler` Method and Some Custom Classes
 
-The goal is to create an `asyncHandler` method and custom classes for `APIError` and `APIResponse`.
+The goal was to create an `asyncHandler` method and custom classes for `APIError` and `APIResponse`.
 
 - [x] Create `utils/` directory inside the `src/` directory.
 
@@ -201,3 +201,54 @@ The goal is to create an `asyncHandler` method and custom classes for `APIError`
     }
   }
   ```
+
+## Create User and Video models
+
+The was to create `user` and `video` models using `mongoose`.
+
+### User model
+
+- username
+- email
+- fullname
+- avatar
+- coverImage
+- watchHistory
+- password
+- refreshToken
+
+## Video model
+
+- videoFile
+- thumbnail
+- title
+- description
+- duration
+- views
+- isPublished
+- owner
+
+**NOTE:** For images and video will be using [Cloudinary](https://cloudinary.com/)
+
+## Setup `bcrypt` and `jwt`
+
+- [x] Install the packages
+
+  ```sh
+  pnpm add bcrypt jsonwebtoken
+  ```
+
+- [x] Add necessary environment variables
+
+  - Access Token Secret
+  - Access Token Expiry
+  - Refresh Token Secret
+  - Refresh Token Expiry
+
+- [x] Create necessary methods
+
+  - isValidPassword
+  - generateAccessToken
+  - generateRefreshToken
+
+Also used `pre` hook on save to hash the user password before saving into the database.
