@@ -252,3 +252,23 @@ The was to create `user` and `video` models using `mongoose`.
   - generateRefreshToken
 
 Also used `pre` hook on save to hash the user password before saving into the database.
+
+## Setup File Uploading Using Cloudinary and Multer
+
+The goal was to install and do basic configurations for cloudinary and multer to work with file uploading.
+
+### Cloudinary
+
+- Add necessary environment variables
+
+  - cloud_name
+  - api_key
+  - api_secret
+
+- Configure cloudinary
+
+- Create an `uploadOnCloudinary` method
+
+### Multer
+
+- Configure disk storage for multer
