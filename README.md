@@ -19,3 +19,4 @@ GitHub repository for learning backend in 2025.
 - [x] [Create User and Video models](./checkpoints/README.md/#create-user-and-video-models)
 - [x] [Setup `bcrypt` and `jwt`](./checkpoints/README.md/#setup-bcrypt-and-jwt)
 - [x] [Setup file handling using cloudinary and multer](./checkpoints/README.md/#setup-file-uploading-using-cloudinary-and-multer)
+- [x] [Setup user route and controller](./checkpoints/README.md/#setup-user-route-and-controller)

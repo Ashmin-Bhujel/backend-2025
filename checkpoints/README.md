@@ -91,7 +91,6 @@ The goal was to connect to the database using mongoose.
     try {
       const response = await mongoose.connect(connectionString);
       console.log("Successfully connected to MongoDB");
-      console.log("Host:", response.connection.host);
     } catch (error) {
       console.error("Failed to connect with MongoDB:", error);
       process.exit(1);
@@ -204,7 +203,7 @@ The goal was to create an `asyncHandler` method and custom classes for `APIError
 
 ## Create User and Video models
 
-The was to create `user` and `video` models using `mongoose`.
+The goal was to create `user` and `video` models using `mongoose`.
 
 ### User model
 
@@ -272,3 +271,24 @@ The goal was to install and do basic configurations for cloudinary and multer to
 ### Multer
 
 - Configure disk storage for multer
+
+## Setup `User` route and controller
+
+The goal was to setup the `User` route and controller.
+
+- [x] Created `userRouter`
+
+- [x] Configured the server to pass on the control to `userRouter` when hitting `/api/v1/user/` route.
+
+- [x] Created controller for `user`
+
+  - Get data from user
+  - Validate user data
+  - Check if there is existing user with same username and email
+  - Check for temporary uploaded image path
+  - Upload the images to Cloudinary
+  - Get the images URL returned from Cloudinary
+  - Create a user object
+  - Get the response back
+
+- [x] Test the api using [Postman](https://postman.com) or other API development / testing tool.

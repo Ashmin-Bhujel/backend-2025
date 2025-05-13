@@ -23,11 +23,9 @@ async function uploadOnCloudinary(localFilePath) {
     }
 
     const response = await cloudinary.uploader.upload(localFilePath, {
-      format: "auto",
+      resource_type: "auto",
+      folder: "backend-2025",
     });
-    console.log(
-      `${response.original_filename} has been uploaded to cloudinary`
-    );
 
     // Remove file from disk after uploading
     fs.unlinkSync(localFilePath);
