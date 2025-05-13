@@ -8,6 +8,7 @@ GitHub repository for learning backend in 2025.
 - `Express.js`
 - `MongoDB`
 - `Mongoose`
+- `Cloudinary`
 
 ## 🎯 Checkpoints
 
