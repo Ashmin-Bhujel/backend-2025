@@ -1,8 +1,18 @@
+import { config } from "dotenv";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { APIError } from "../utils/apiError.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { APIResponse } from "../utils/apiResponse.js";
+
+// Accessing environment variables
+config();
+const nodeEnvironmentMode = process.env.NODE_ENV;
+const cookiesOptions = {
+  httpOnly: true,
+  secure: nodeEnvironmentMode === "production",
+  sameSite: nodeEnvironmentMode === "production" ? "None" : "Lax",
+};
 
 // Access and Refresh token generator
 async function generateAccessAndRefreshToken(userId) {
@@ -142,13 +152,6 @@ const loginUser = asyncHandler(async (req, res) => {
     "-password -refreshToken"
   );
 
-  // Send cookies to client's device
-  const cookiesOptions = {
-    httpOnly: true,
-    secure: false,
-    sameSite: "Lax",
-  };
-
   // Send response back
   res
     .status(200)
@@ -176,12 +179,6 @@ const logoutUser = asyncHandler(async (req, res) => {
       new: true,
     }
   );
-
-  const cookiesOptions = {
-    httpOnly: true,
-    secure: false,
-    sameSite: "Lax",
-  };
 
   res
     .status(200)
