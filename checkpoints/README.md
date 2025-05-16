@@ -276,11 +276,11 @@ The goal was to install and do basic configurations for cloudinary and multer to
 
 The goal was to setup the `User` route and controller.
 
-- [x] Created `userRouter`
+- [x] Create `userRouter`
 
 - [x] Configured the server to pass on the control to `userRouter` when hitting `/api/v1/user/` route.
 
-- [x] Created controller for `user`
+- [x] Create controller for `user`
 
   - Get data from user
   - Validate user data
@@ -290,5 +290,52 @@ The goal was to setup the `User` route and controller.
   - Get the images URL returned from Cloudinary
   - Create a user object
   - Get the response back
+
+- [x] Test the api using [Postman](https://postman.com) or other API development / testing tool.
+
+## Setup Access and Refresh Token
+
+The goal was to setup the necessary configurations and methods related to access token and refresh token.
+
+- [x] Create middleware for auth.
+
+  - Get access token from cookies or from authorization header
+  - Validate and decode access token
+  - Get user from database
+  - Add user to the request object
+  - Pass the control to next
+
+- [x] Create access and refresh token generator.
+
+  - Get user from database
+  - Generate new access and refresh token
+  - Save generated refresh token in database
+  - Return generated tokens
+
+## Setup `/login`, `/logout` and `/refresh-access-token` Routes
+
+- [x] Create `loginUser` controller
+
+  - Get user input
+  - Validate data
+  - Check if user exists or not
+  - Validate password
+  - Generate and save new access and refresh token
+  - Get instance of logged in user
+  - Send response back
+
+- [x] Create `logoutUser` controller
+
+  - Use user data passed on from auth middleware to get and unset refresh token in database
+  - Unset cookies and send response back
+
+- [x] Create `refreshAccessToken` controller
+
+  - Get refresh token from cookies or request body
+  - Check, verify and decode the refresh token
+  - Get user from database
+  - Check and match the incoming refresh token and refresh token from database
+  - Generate new access and refresh tokens
+  - Set new token to cookies and send response back
 
 - [x] Test the api using [Postman](https://postman.com) or other API development / testing tool.

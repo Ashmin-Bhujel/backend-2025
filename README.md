@@ -20,3 +20,5 @@ GitHub repository for learning backend in 2025.
 - [x] [Setup `bcrypt` and `jwt`](./checkpoints/README.md/#setup-bcrypt-and-jwt)
 - [x] [Setup file handling using cloudinary and multer](./checkpoints/README.md/#setup-file-uploading-using-cloudinary-and-multer)
 - [x] [Setup user route and controller](./checkpoints/README.md/#setup-user-route-and-controller)
+- [x] [Setup access and refresh token](./checkpoints/README.md/#setup-access-and-refresh-token)
+- [x] [Setup routes for login, logout and refresh access token](./checkpoints/README.md/#setup-login-logout-and-refresh-access-token-routes)

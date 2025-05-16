@@ -4,10 +4,12 @@ import { APIError } from "../utils/apiError.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { APIResponse } from "../utils/apiResponse.js";
+import jwt from "jsonwebtoken";
 
 // Accessing environment variables
 config();
 const nodeEnvironmentMode = process.env.NODE_ENV;
+const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 const cookiesOptions = {
   httpOnly: true,
   secure: nodeEnvironmentMode === "production",
@@ -168,17 +170,11 @@ const loginUser = asyncHandler(async (req, res) => {
 
 // Logout user controller
 const logoutUser = asyncHandler(async (req, res) => {
-  await User.findByIdAndUpdate(
-    req.user?._id,
-    {
-      $unset: {
-        refreshToken: 1,
-      },
+  await User.findByIdAndUpdate(req.user?._id, {
+    $unset: {
+      refreshToken: 1,
     },
-    {
-      new: true,
-    }
-  );
+  });
 
   res
     .status(200)
@@ -187,4 +183,54 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new APIResponse(200, "User logged out successfully", {}));
 });
 
-export { registerUser, loginUser, logoutUser };
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  // Get refresh token from cookies or request body
+  const incomingRefreshToken =
+    req.cookies?.refreshToken || req.body?.refreshToken;
+
+  // Check refresh token
+  if (!incomingRefreshToken) {
+    throw new APIError(401, "Unauthorized request");
+  }
+
+  // Verify refresh token
+  const decodedRefreshToken = jwt.verify(
+    incomingRefreshToken,
+    refreshTokenSecret
+  );
+
+  // Check decoded refresh token
+  if (!decodedRefreshToken) {
+    throw new APIError(
+      500,
+      "Something went wrong while decoding refresh token"
+    );
+  }
+
+  // Get user
+  const user = await User.findById(decodedRefreshToken?._id);
+
+  // Check user
+  if (!user) {
+    throw new APIError(401, "Invalid refresh token");
+  }
+
+  // Generate new tokens
+  const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+    user?._id
+  );
+
+  // Send back response
+  res
+    .status(200)
+    .cookie("accessToken", accessToken, cookiesOptions)
+    .cookie("refreshToken", refreshToken, cookiesOptions)
+    .json(
+      new APIResponse(200, "Refreshed access token successfully", {
+        accessToken,
+        refreshToken,
+      })
+    );
+});
+
+export { registerUser, loginUser, logoutUser, refreshAccessToken };
