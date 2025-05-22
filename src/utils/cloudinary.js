@@ -38,4 +38,18 @@ async function uploadOnCloudinary(localFilePath) {
   }
 }
 
-export { uploadOnCloudinary };
+// Delete image file
+async function deleteAssetOnCloudinary(publicId, assetType = "image") {
+  try {
+    const response = await cloudinary.uploader.destroy(publicId, {
+      resource_type: assetType,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Failed to delete the asset:", error);
+    return null;
+  }
+}
+
+export { uploadOnCloudinary, deleteAssetOnCloudinary };
