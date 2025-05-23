@@ -2,7 +2,10 @@ import { config } from "dotenv";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { APIError } from "../utils/apiError.js";
 import { User } from "../models/user.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteAssetOnCloudinary,
+  uploadOnCloudinary,
+} from "../utils/cloudinary.js";
 import { APIResponse } from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
 
@@ -10,6 +13,7 @@ import jwt from "jsonwebtoken";
 config();
 const nodeEnvironmentMode = process.env.NODE_ENV;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+const cloudinaryFolderName = process.env.CLOUDINARY_FOLDER_NAME;
 const cookiesOptions = {
   httpOnly: true,
   secure: nodeEnvironmentMode === "production",
@@ -183,6 +187,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new APIResponse(200, "User logged out successfully", {}));
 });
 
+// Refresh access token controller
 const refreshAccessToken = asyncHandler(async (req, res) => {
   // Get refresh token from cookies or request body
   const incomingRefreshToken =
@@ -233,4 +238,47 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+// Change current password controller
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  // Get data from user
+  const { currentPassword, newPassword } = req.body;
+
+  // Check if got the current and new password or not
+  if (!currentPassword) {
+    throw new APIError(400, "Current password is required");
+  }
+  if (!newPassword) {
+    throw new APIError(400, "New password is required");
+  }
+
+  // Check if both the current and new password are same or not
+  if (currentPassword === newPassword) {
+    throw new APIError(400, "Both current and new password are same");
+  }
+
+  // Get user data
+  const user = await User.findById(req.user?._id);
+
+  // Check if the given current password is correct
+  const isValidPassword = await user.isValidPassword(currentPassword);
+  if (!isValidPassword) {
+    throw new APIError(400, "Invalid current password");
+  }
+
+  // Save the new password
+  user.password = newPassword;
+  await user.save({ validateBeforeSave: false });
+
+  // Send back response
+  res
+    .status(200)
+    .json(new APIResponse(200, "Changed current password successfully", {}));
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  changeCurrentPassword,
+};
