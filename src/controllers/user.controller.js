@@ -288,6 +288,48 @@ const getCurrentUser = asyncHandler((req, res) => {
   );
 });
 
+// Update user data controller
+const updateUserData = asyncHandler(async (req, res) => {
+  // Get user inputs
+  const { username, fullname, email } = req.body;
+
+  // Check if the given inputs are empty or not
+  if (!username) {
+    throw new APIError(400, "Username is required");
+  }
+  if (!fullname) {
+    throw new APIError(400, "Fullname is required");
+  }
+  if (!email) {
+    throw new APIError(400, "Email is required");
+  }
+
+  // Update the data
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      username,
+      fullname,
+      email,
+    },
+    {
+      new: true,
+    }
+  ).select("-password -refreshToken");
+
+  // If the user is updated or not
+  if (!updatedUser) {
+    throw new APIError(400, "Something went wrong while updating user data");
+  }
+
+  // Send back response
+  res.status(200).json(
+    new APIResponse(200, "User data updated successfully", {
+      user: updatedUser,
+    })
+  );
+});
+
 export {
   registerUser,
   loginUser,
@@ -295,4 +337,5 @@ export {
   refreshAccessToken,
   changeCurrentPassword,
   getCurrentUser,
+  updateUserData,
 };
