@@ -275,10 +275,24 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     .json(new APIResponse(200, "Changed current password successfully", {}));
 });
 
+// Get current user controller
+const getCurrentUser = asyncHandler((req, res) => {
+  // Get current user data
+  const currentUser = req.user;
+
+  // Send back response
+  res.status(200).json(
+    new APIResponse(200, "Fetched current user data successfully", {
+      currentUser,
+    })
+  );
+});
+
 export {
   registerUser,
   loginUser,
   logoutUser,
   refreshAccessToken,
   changeCurrentPassword,
+  getCurrentUser,
 };
