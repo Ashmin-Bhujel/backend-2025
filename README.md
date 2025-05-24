@@ -22,3 +22,4 @@ GitHub repository for learning backend in 2025.
 - [x] [Setup user route and controller](./checkpoints/README.md/#setup-user-route-and-controller)
 - [x] [Setup access and refresh token](./checkpoints/README.md/#setup-access-and-refresh-token)
 - [x] [Setup routes for login, logout and refresh access token](./checkpoints/README.md/#setup-login-logout-and-refresh-access-token-routes)
+- [x] [Create controllers for various user related options](./checkpoints/README.md/#create-controllers-for-various-user-related-options)

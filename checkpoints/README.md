@@ -291,7 +291,7 @@ The goal was to setup the `User` route and controller.
   - Create a user object
   - Get the response back
 
-- [x] Test the api using [Postman](https://postman.com) or other API development / testing tool.
+- [x] Test the API endpoints using [Postman](https://postman.com) or other API development / testing tool.
 
 ## Setup Access and Refresh Token
 
@@ -338,4 +338,41 @@ The goal was to setup the necessary configurations and methods related to access
   - Generate new access and refresh tokens
   - Set new token to cookies and send response back
 
-- [x] Test the api using [Postman](https://postman.com) or other API development / testing tool.
+- [x] Test the API endpoints using [Postman](https://postman.com) or other API development / testing tool.
+
+## Create Controllers for Various User Related Options
+
+The goal was to create controllers for various user related options such and change user password, update user data, update avatar and cover image.
+
+- [x] Change User Password Controller
+
+  - Get required data from user
+  - Check the given data
+  - Get user
+  - Compare old password
+  - Change and save old password with new password
+  - Send response back
+
+- [x] Update User Data Controller
+
+  - Get required data from user
+  - Validate the data
+  - Get user
+  - Update and save new data
+
+- [x] Update Avatar Image Controller
+
+  - Get new avatar image from the user
+  - Check the image local path
+  - Upload the new avatar to cloudinary
+  - Delete the old avatar image from cloudinary
+
+- [x] Update Cover Image Controller
+
+  - Similar steps to that of avatar image just for the cover image
+
+- [x] Get Current User Data
+
+  - If the user is logged in we return the current user data from `req.user`
+
+- [x] Test the API endpoints using [Postman](https://postman.com) or other API development / testing tool.
