@@ -308,9 +308,11 @@ const updateUserData = asyncHandler(async (req, res) => {
   const updatedUser = await User.findByIdAndUpdate(
     req.user?._id,
     {
-      username,
-      fullname,
-      email,
+      $set: {
+        username,
+        fullname,
+        email,
+      },
     },
     {
       new: true,
@@ -330,6 +332,101 @@ const updateUserData = asyncHandler(async (req, res) => {
   );
 });
 
+// Update avatar image
+const updateAvatarImage = asyncHandler(async (req, res) => {
+  // Get avatar image from user
+  const avatarLocalPath = req.file?.path;
+
+  // Check if received the image or not
+  if (!avatarLocalPath) {
+    throw new APIError(400, "Avatar image is required");
+  }
+
+  // Upload the avatar image to cloudinary
+  const updatedAvatar = await uploadOnCloudinary(avatarLocalPath);
+
+  // Check if the image uploaded to cloudinary or not
+  if (!updatedAvatar?.url) {
+    throw new APIError(
+      400,
+      "Something went wrong while uploading avatar image"
+    );
+  }
+
+  // Delete old avatar
+  const publicID =
+    cloudinaryFolderName +
+    req.user?.avatar.split(cloudinaryFolderName)[1].split(".")[0];
+  const response = await deleteAssetOnCloudinary(publicID, "image");
+
+  // Update changes in database
+  if (response.result === "ok") {
+    await User.findByIdAndUpdate(req.user?._id, {
+      $set: {
+        avatar: updatedAvatar?.url,
+      },
+    });
+  } else {
+    throw new APIError(
+      400,
+      "Something went wrong while deleting old avatar image"
+    );
+  }
+
+  // Send back response
+  res.status(200).json(
+    new APIResponse(200, "Avatar image updated successfully", {
+      avatar: updatedAvatar?.url,
+    })
+  );
+});
+
+// Update cover image
+const updateCoverImage = asyncHandler(async (req, res) => {
+  // Get cover image from user
+  const coverImageLocalPath = req.file?.path;
+
+  // Check if image is received or not
+  if (!coverImageLocalPath) {
+    throw new APIError(400, "Cover image is required");
+  }
+
+  // Upload the cover image to cloudinary
+  const updatedCoverImage = await uploadOnCloudinary(coverImageLocalPath);
+
+  // Check if the image uploaded to cloudinary or not
+  if (!updatedCoverImage?.url) {
+    throw new APIError(400, "Something went wrong while uploading cover image");
+  }
+
+  // Delete old cover image
+  const publicID =
+    cloudinaryFolderName +
+    req.user?.coverImage.split(cloudinaryFolderName)[1].split(".")[0];
+  const response = await deleteAssetOnCloudinary(publicID, "image");
+
+  // Update changes in database
+  if (response.result === "ok") {
+    await User.findByIdAndUpdate(req.user?._id, {
+      $set: {
+        coverImage: updatedCoverImage?.url,
+      },
+    });
+  } else {
+    throw new APIError(
+      400,
+      "Something went wrong while deleting old cover image"
+    );
+  }
+
+  // Send back response
+  res.status(200).json(
+    new APIResponse(200, "Cover image updated successfully", {
+      coverImage: updatedCoverImage?.url,
+    })
+  );
+});
+
 export {
   registerUser,
   loginUser,
@@ -338,4 +435,6 @@ export {
   changeCurrentPassword,
   getCurrentUser,
   updateUserData,
+  updateAvatarImage,
+  updateCoverImage,
 };

@@ -6,6 +6,8 @@ import {
   logoutUser,
   refreshAccessToken,
   registerUser,
+  updateAvatarImage,
+  updateCoverImage,
   updateUserData,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -45,5 +47,15 @@ router.route("/get-current-user").get(verifyJWT, getCurrentUser);
 
 // Update user data
 router.route("/update-user-data").post(verifyJWT, updateUserData);
+
+// Update avatar image
+router
+  .route("/update-avatar-image")
+  .post(verifyJWT, upload.single("avatar"), updateAvatarImage);
+
+// Update cover image
+router
+  .route("/update-cover-image")
+  .post(verifyJWT, upload.single("coverImage"), updateCoverImage);
 
 export default router;
