@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   changeCurrentPassword,
+  getChannelData,
   getCurrentUser,
   loginUser,
   logoutUser,
@@ -59,5 +60,12 @@ router
 router
   .route("/update-cover-image")
   .patch(verifyJWT, upload.single("coverImage"), updateCoverImage);
+
+// Get channel data
+// TODO: Add real controller
+router.route("/channel/:username").get(verifyJWT, (req, res) => {
+  const { username } = req.params;
+  res.status(200).json({ username: username, msg: `Hello, ${username}` });
+});
 
 export default router;

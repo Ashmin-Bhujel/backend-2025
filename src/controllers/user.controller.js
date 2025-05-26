@@ -427,6 +427,76 @@ const updateCoverImage = asyncHandler(async (req, res) => {
   );
 });
 
+// Get channel data
+const getChannelData = asyncHandler(async (req, res) => {
+  // Get username
+  const { username } = req.params;
+
+  // Check the username
+  if (!username.trim()) {
+    throw new APIError(400, "No user found");
+  }
+
+  // Aggregation
+  const channel = await User.aggregate([
+    // Get the documents matching the given username
+    {
+      $match: {
+        username: username.toLowerCase(),
+      },
+    },
+    // Look for documents inside the subscriptions collection where the user with the given id is present in channel field
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "_id",
+        foreignField: "channel",
+        as: "subscribers",
+      },
+    },
+    // Look for documents inside the subscription collection where the user with the given id is present in subscriber field
+    {
+      $lookup: {
+        from: "subscriptions",
+        localField: "_id",
+        foreignField: "subscriber",
+        as: "subscribedTo",
+      },
+    },
+    // Add the following fields for subscribersCount, subscribedToCount and isSubscribed
+    {
+      $addFields: {
+        subscribersCount: {
+          $size: "$subscribers",
+        },
+        subscribedToCount: {
+          $size: "$subscribedTo",
+        },
+        isSubscribed: {
+          $cond: {
+            if: { $in: [req.user?._id, "$subscribers.subscriber"] },
+            then: true,
+            else: false,
+          },
+        },
+      },
+    },
+    // Return back a document with only the specified fields
+    {
+      $project: {
+        fullName: 1,
+        username: 1,
+        email: 1,
+        avatar: 1,
+        coverImage: 1,
+        subscribersCount: 1,
+        channelsSubscribedToCount: 1,
+        isSubscribed: 1,
+      },
+    },
+  ]);
+});
+
 export {
   registerUser,
   loginUser,
@@ -437,4 +507,5 @@ export {
   updateUserData,
   updateAvatarImage,
   updateCoverImage,
+  getChannelData,
 };
