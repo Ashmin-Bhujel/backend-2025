@@ -376,3 +376,9 @@ The goal was to create controllers for various user related options such and cha
   - If the user is logged in we return the current user data from `req.user`
 
 - [x] Test the API endpoints using [Postman](https://postman.com) or other API development / testing tool.
+
+## Create Controller for Getting Channel Data
+
+- The goal was create a controller which uses the MongoDB aggregation pipeline to get channel data.
+- The returned data or object will contain channel (basically a user) data with added fields like `subscribersCount`, `subscribedToCount` and `isSubscribed`.
+- The most complex part of this controller was it aggregation pipeline.
